@@ -3,7 +3,7 @@ name: Tinybird - Recommendations Workflow
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 0,12 * * *'
+    - cron: "0 0,12 * * *"
 
 jobs:
   build:
@@ -15,10 +15,9 @@ jobs:
         with:
           python-version: 3.11
       - name: Install requirements
-        run: pip install -r requirements.txt
+        run: pip install -r scripts/python/requirements.txt
       - name: Generate recommendations
         env:
-          TB_APPEND_TOKEN: ${{ secrets.TB_APPEND_TOKEN }}
-          TB_READ_TOKEN: ${{ secrets.TB_READ_TOKEN }}
-          TB_HOST: https://api.us-east.tinybird.co
-        run: python load.py
+          TB_TOKEN: ${{ secrets.TB_TOKEN }}
+          TB_HOST: ${{ secrets.TB_HOST }}
+        run: python scripts/python/generate_embeddings.py
