@@ -74,13 +74,8 @@ async function sendPostsToTinybird(posts, model) {
     const event = {
       timestamp,
       slug: post.slug,
-      title: post.title || "",
-      excerpt: post.excerpt || "",
       embedding,
-      categories: post.categories || [],
-      published_on: post.published_on || "",
       status: post.status || "published",
-      updated_at: post.updated_at || timestamp,
     };
 
     events.push(JSON.stringify(event));
@@ -217,7 +212,7 @@ async function main() {
       console.log(`Found ${related.length} related posts:`);
       for (const post of related) {
         console.log(
-          `  - ${post.title} (similarity: ${post.similarity?.toFixed(3) || 0})`
+          `  - ${post.slug} (similarity: ${post.similarity?.toFixed(3) || 0})`
         );
       }
     }

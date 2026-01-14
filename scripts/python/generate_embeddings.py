@@ -82,13 +82,8 @@ def send_posts_to_tinybird(posts: List[Dict], model: SentenceTransformer) -> Non
         event = {
             "timestamp": timestamp,
             "slug": post.get("slug"),
-            "title": post.get("title", ""),
-            "excerpt": post.get("excerpt", ""),
             "embedding": embedding,
-            "categories": post.get("categories", []),
-            "published_on": post.get("published_on", ""),
             "status": post.get("status", "published"),
-            "updated_at": post.get("updated_at", timestamp),
         }
 
         events.append(json.dumps(event))
@@ -205,5 +200,5 @@ if __name__ == "__main__":
         print(f"Found {len(related)} related posts:")
         for post in related:
             print(
-                f"  - {post.get('title')} (similarity: {post.get('similarity', 0):.3f})"
+                f"  - {post.get('slug')} (similarity: {post.get('similarity', 0):.3f})"
             )

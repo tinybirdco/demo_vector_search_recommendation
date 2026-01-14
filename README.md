@@ -314,6 +314,7 @@ const post = {
 const textToEmbed = `${post.title} ${post.excerpt} ${post.content}`;
 const embedding = await getOpenAIEmbedding(textToEmbed);
 // Now use `embedding` in the event you send to Tinybird
+// Only send: { timestamp, slug, embedding, status }
 ```
 
 _If using OpenAI, ensure your Tinybird pipes and queries expect 1536 dimensions: update any checks from `length(embedding) = 384` to `length(embedding) = 1536`, and regenerate all embeddings accordingly._
@@ -337,10 +338,6 @@ Get related posts for a given slug.
   "data": [
     {
       "slug": "related-post",
-      "title": "Related Post Title",
-      "excerpt": "Related post excerpt",
-      "categories": ["tech", "ai"],
-      "published_on": "2025-01-15",
       "status": "published",
       "similarity": 0.85
     }

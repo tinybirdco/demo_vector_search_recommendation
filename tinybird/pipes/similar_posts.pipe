@@ -15,10 +15,6 @@ SQL >
     %
     SELECT
         slug,
-        argMax(title, timestamp) AS title,
-        argMax(excerpt, timestamp) AS excerpt,
-        argMax(categories, timestamp) AS categories,
-        argMax(published_on, timestamp) AS published_on,
         argMax(status, timestamp) AS status,
         argMax(embedding, timestamp) AS embedding
     FROM posts
@@ -31,10 +27,6 @@ SQL >
     %
     SELECT
         p.slug,
-        p.title,
-        p.excerpt,
-        p.categories,
-        p.published_on,
         p.status,
         1 - cosineDistance(t.target_embedding, p.embedding) AS similarity
     FROM aggregated_posts AS p

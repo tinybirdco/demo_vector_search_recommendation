@@ -3,15 +3,10 @@ DESCRIPTION >
 
 SCHEMA >
     `slug` String `json:$.slug`,
-    `title` String `json:$.title`,
-    `excerpt` String `json:$.excerpt`,
     `embedding` Array(Float32) `json:$.embedding[:]`,
-    `categories` Array(String) `json:$.categories[:]`,
-    `published_on` DateTime `json:$.published_on`,
     `status` String `json:$.status`,
-    `updated_at` DateTime `json:$.updated_at`,
     `timestamp` DateTime `json:$.timestamp` DEFAULT now()
 
-ENGINE "ReplacingMergeTree"
-ENGINE_VER "updated_at"
+ENGINE ReplacingMergeTree
+ENGINE_VER "timestamp"
 ENGINE_SORTING_KEY "slug"
