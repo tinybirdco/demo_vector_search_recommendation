@@ -4,10 +4,10 @@ NODE get_target_embedding
 SQL >
     %
     SELECT embedding AS target_embedding
-    FROM posts
+    FROM posts FINAL
     WHERE slug = {{ String(slug, required=True) }}
         AND status = 'published'
-    ORDER BY timestamp DESC
+        AND length(embedding) = 384
     LIMIT 1
 
 NODE aggregated_posts
@@ -15,12 +15,12 @@ SQL >
     %
     SELECT
         slug,
-        argMax(status, timestamp) AS status,
-        argMax(embedding, timestamp) AS embedding
-    FROM posts
+        status,
+        embedding
+    FROM posts FINAL
     WHERE slug != {{ String(slug, required=True) }}
-    GROUP BY slug
-    HAVING status = 'published' AND length(embedding) = 384
+        AND status = 'published'
+        AND length(embedding) = 384
 
 NODE find_similar_posts
 SQL >
@@ -31,8 +31,7 @@ SQL >
         1 - cosineDistance(t.target_embedding, p.embedding) AS similarity
     FROM aggregated_posts AS p
     CROSS JOIN get_target_embedding AS t
-    WHERE length(t.target_embedding) = 384
-    HAVING similarity >= {{ Float32(min_similarity, 0.1, description='Minimum similarity threshold') }}
+    WHERE similarity >= {{ Float32(min_similarity, 0.1, description='Minimum similarity threshold') }}
     ORDER BY similarity DESC
     LIMIT {{ Int32(limit, 10, description='Number of related posts to return') }}
 
