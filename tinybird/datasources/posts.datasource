@@ -1,12 +1,12 @@
-TOKEN "append_datasources" APPEND
+DESCRIPTION >
+    Blog posts with embeddings for similarity search
 
 SCHEMA >
-    `timestamp` DateTime `json:$.timestamp`,
-    `title` String `json:$.title`,
-    `url` String `json:$.url`,
-    `embedding` Array(Float32) `json:$.embedding[:]`
+    `slug` String `json:$.slug`,
+    `embedding` Array(Float32) `json:$.embedding[:]`,
+    `status` String `json:$.status`,
+    `timestamp` DateTime `json:$.timestamp` DEFAULT now()
 
 ENGINE ReplacingMergeTree
-ENGINE_PARTITION_KEY ""
-ENGINE_SORTING_KEY title, url
-ENGINE_VER timestamp
+ENGINE_VER "timestamp"
+ENGINE_SORTING_KEY "slug"

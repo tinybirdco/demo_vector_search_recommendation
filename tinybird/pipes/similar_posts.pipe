@@ -1,27 +1,38 @@
-TOKEN "read_endpoints" READ
+TOKEN read_token READ
 
-NODE endpoint
+NODE get_target_embedding
 SQL >
     %
-    WITH
-        (
-            SELECT embedding
-            FROM
-                (
-                    SELECT 0 AS id, embedding
-                    FROM posts
-                    WHERE
-                        title = {{ String(title, 'Resolving a year-long ClickHouse lock contention') }}
-                    ORDER BY timestamp DESC
-                    LIMIT 1
-                    UNION ALL
-                    SELECT 999 AS id, arrayWithConstant(384, 0.0) embedding
-                )
-            ORDER BY id
-            LIMIT 1
-        ) AS post_embedding
-    SELECT title, url, L2Distance(embedding, post_embedding) similarity
+    SELECT embedding AS target_embedding
     FROM posts FINAL
-    WHERE title <> {{ String(title, 'Resolving a year-long ClickHouse lock contention') }}
-    ORDER BY similarity ASC
-    LIMIT 10
+    WHERE slug = {{ String(slug, required=True) }}
+        AND status = 'published'
+        AND length(embedding) = 384
+    LIMIT 1
+
+NODE aggregated_posts
+SQL >
+    %
+    SELECT
+        slug,
+        status,
+        embedding
+    FROM posts FINAL
+    WHERE slug != {{ String(slug, required=True) }}
+        AND status = 'published'
+        AND length(embedding) = 384
+
+NODE find_similar_posts
+SQL >
+    %
+    SELECT
+        p.slug,
+        p.status,
+        1 - cosineDistance(t.target_embedding, p.embedding) AS similarity
+    FROM aggregated_posts AS p
+    CROSS JOIN get_target_embedding AS t
+    WHERE similarity >= {{ Float32(min_similarity, 0.1, description='Minimum similarity threshold') }}
+    ORDER BY similarity DESC
+    LIMIT {{ Int32(limit, 10, description='Number of related posts to return') }}
+
+TYPE endpoint

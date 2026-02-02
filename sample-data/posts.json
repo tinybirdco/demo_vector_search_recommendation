@@ -1,0 +1,21 @@
+[
+  {
+    "slug": "vector-search-introduction",
+    "title": "Introduction to Vector Search",
+    "excerpt": "Learn how vector search works and how to implement it in your applications.",
+    "content": "Vector search is a powerful technique for finding similar items in high-dimensional spaces...",
+    "categories": ["tech", "ai", "search"],
+    "published_on": "2025-01-15",
+    "status": "published",
+    "updated_at": "2025-01-20"
+  },
+  {
+    "slug": "building-recommendation-systems",
+    "title": "Building Recommendation Systems with Embeddings",
+    "excerpt": "Discover how to use embeddings to build effective recommendation systems.",
+    "content": "Recommendation systems are essential for modern applications...",
+    "categories": ["tech", "ml", "recommendations"],
+    "published_on": "2025-01-16",
+    "status": "published"
+  }
+]
